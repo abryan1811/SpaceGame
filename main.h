@@ -1,8 +1,6 @@
-#include <raylib.h>
+#include "Physicis/Gravity.h"
+#include "Entities/Lander.h"
 
-struct Character
-{
-    Texture2D texture;
-    Rectangle rec;
-    Vector2 position;
-};
+
+
+
