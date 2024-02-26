@@ -1,4 +1,5 @@
-#include "main.h"
+#include "Physicis/Gravity.cpp"
+#include "MovementController.h"
 
 int main() {
     int windowWidth = 800;
@@ -20,7 +21,7 @@ int main() {
     
     // Load the spaceship texture
     
-    Character shipData;
+    Ship shipData;
     shipData.texture = LoadTexture("Assets/ship.png"); 
     float scale = 2.0f;
     float scaledHeight = shipData.texture.height * scale;
@@ -28,7 +29,8 @@ int main() {
     //Object Locations
     shipData.position.x = windowWidth / 2 - scaledHeight / 2; // Center the ship
     float floorPositionY = windowHeight - 50;
-    shipData.position.y = floorPositionY - scaledHeight + 20;  
+    shipData.position.y = floorPositionY - scaledHeight + 20; 
+    shipData.mass = 1.0f; 
 
     // Use to check the ship has a safe landing
     const float StarterPosition = shipData.position.y;
@@ -45,7 +47,7 @@ int main() {
 
         float deltaTime = GetFrameTime();
        
-       movementController.UpdatePosition(shipData.position, heightCounter, deltaTime);
+        movementController.UpdatePosition(shipData.position, heightCounter, deltaTime);        
 
         DrawTexturePro(spaceBackground, sourceSpaceBGRec, destinationSpaceBGRec, backgroundOrigin, 0.0f, WHITE);
 
@@ -56,6 +58,9 @@ int main() {
         DrawRectangle(0, floorPositionY, windowWidth, 10, WHITE);
 
         DrawText(TextFormat("Height: %0.2f miles", heightCounter), 10, 10, 20, WHITE);
+
+        SetForce(shipData);
+        ApplyEuler(shipData, deltaTime);
 
         EndDrawing();
     }

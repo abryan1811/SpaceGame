@@ -1,41 +1,36 @@
 #include<iostream>
-#include "Gravity.h"
+#include "Entities/Lander.h"
 
-struct Vector1
+Vector2 createVector2(float x, float y) // RayLib Vector2 has no constructor, so I use this when creating new vectors
 {
-    Vector1(float _y)
-        :y(_y)
-    {};
+    Vector2 vec;
+    vec.x = x;
+    vec.y = y;
 
-    Vector1()
-        :y(0.0f)
-    {};
-
-    float y;
-};
-
-struct Point
-{   
-    float mass;
-    Vector1 f;    
-    Vector1 r;
-    Vector1 dr;
-    Vector1 v;
-    Vector1 dv;
-
-     Point()
-    {};
-};
-
-Vector1 Euler(Vector1 a, float h)
-{
-    return Vector1(a.y * h);
+    return vec; 
 }
 
-const Vector1 Gravity(-1.625f);
-Vector1 Thrust(0.0f);
-
-void SetForce(Point& p)
+Vector2 Euler(Vector2 a, float h)
 {
-    p.f.y = (Gravity.y + Thrust.y) * p.mass;
+     return createVector2(0.0f, a.y * h);    
+}
+
+const Vector2 Gravity = createVector2(0.0f, -10.625f);
+Vector2 Thrust = createVector2(0.0f, 0.0f);
+
+void SetForce(Ship& ship)
+{    
+    ship.f.y = (Gravity.y + ship.Thrust.y) * ship.mass;
+}
+
+void ApplyEuler(Ship& ship, float deltaTime)
+{
+    ship.dv = Euler(createVector2(0.0f,ship.f.y * 1 / ship.mass), deltaTime);
+    // ship.v.y = ship.v.y + ship.dv.y;
+    ship.dr.y = Gravity.y * deltaTime;
+    ship.position.y = ship.position.y - ship.dr.y;
+    return;
+
+    // ship.position.y -= Gravity.y * deltaTime; // I failed in implementing the Euler and Force for the thrusters
+                                                // So I've used this for now so we can at least visualize the gravity :D
 }
