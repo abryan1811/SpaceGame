@@ -29,8 +29,14 @@ int main() {
     //Object Locations
     shipData.position.x = windowWidth / 2 - scaledHeight / 2; // Center the ship
     float floorPositionY = windowHeight - 50;
-    shipData.position.y = floorPositionY - scaledHeight + 20; 
+    // shipData.position.y = floorPositionY - scaledHeight + 20; 
+    shipData.position.y = 10.0f; 
     shipData.mass = 1.0f; 
+    shipData.dr.y = 0.0f;
+    shipData.v.y = 0.0f;
+    shipData.dv.y = 0.0f;
+    shipData.Thrust.y = 0.0f;
+
 
     // Use to check the ship has a safe landing
     const float StarterPosition = shipData.position.y;
@@ -45,8 +51,13 @@ int main() {
         BeginDrawing();
         ClearBackground(BLACK);
 
-        float deltaTime = GetFrameTime();
-       
+        // float deltaTime = GetFrameTime();
+
+        float deltaTime = 0.01f;
+        //  SetForce(shipData);
+        // ApplyEuler(shipData, deltaTime);
+
+        ApplyGravity(shipData, deltaTime);
         movementController.UpdatePosition(shipData.position, heightCounter, deltaTime);        
 
         DrawTexturePro(spaceBackground, sourceSpaceBGRec, destinationSpaceBGRec, backgroundOrigin, 0.0f, WHITE);
@@ -57,10 +68,9 @@ int main() {
         // Draw the ground rectangle
         DrawRectangle(0, floorPositionY, windowWidth, 10, WHITE);
 
-        DrawText(TextFormat("Height: %0.2f miles", heightCounter), 10, 10, 20, WHITE);
+        DrawText(TextFormat("Height: %0.2f miles", shipData.position.y), 10, 10, 20, WHITE);
 
-        SetForce(shipData);
-        ApplyEuler(shipData, deltaTime);
+       
 
         EndDrawing();
     }
