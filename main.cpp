@@ -1,5 +1,4 @@
 #include "Physicis/Gravity.cpp"
-#include "MovementController.h"
 
 int main() {
     int windowWidth = 800;
@@ -43,6 +42,7 @@ int main() {
 
     float heightCounter = 0.0f;
     const float moveSpeed = 100.0f;
+    const float deltaTime = 0.06f; // 1 frame every 0.06ms, reflecting 60fps
 
     MovementController movementController(moveSpeed, StarterPosition);
 
@@ -51,14 +51,9 @@ int main() {
         BeginDrawing();
         ClearBackground(BLACK);
 
-        // float deltaTime = GetFrameTime();
-
-        float deltaTime = 0.01f;
-        //  SetForce(shipData);
-        // ApplyEuler(shipData, deltaTime);
-
         ApplyGravity(shipData, deltaTime);
-        movementController.UpdatePosition(shipData.position, heightCounter, deltaTime);        
+        
+        movementController.UpdatePosition(shipData, heightCounter, deltaTime, Gravity);        
 
         DrawTexturePro(spaceBackground, sourceSpaceBGRec, destinationSpaceBGRec, backgroundOrigin, 0.0f, WHITE);
 
@@ -69,9 +64,7 @@ int main() {
         DrawRectangle(0, floorPositionY, windowWidth, 10, WHITE);
 
         DrawText(TextFormat("Height: %0.2f miles", shipData.position.y), 10, 10, 20, WHITE);
-
        
-
         EndDrawing();
     }
 
