@@ -1,4 +1,5 @@
 #include "Physicis/Gravity.cpp"
+#include "StartMenu.h"
 
 int main() {
     int windowWidth = 800;
@@ -8,6 +9,8 @@ int main() {
     // Initialize the window
     InitWindow(windowWidth, windowHeight, Title);
     SetTargetFPS(60);
+
+    GameMenu startMenu;
 
     //Space Background
     Texture2D spaceBackground = LoadTexture("Assets/backgroundImage.png");
@@ -36,7 +39,6 @@ int main() {
     shipData.dv.y = 0.0f;
     shipData.Thrust.y = 0.0f;
 
-
     // Use to check the ship has a safe landing
     const float StarterPosition = shipData.position.y;
 
@@ -46,6 +48,23 @@ int main() {
 
     MovementController movementController(moveSpeed, StarterPosition);
 
+    while (!WindowShouldClose()) {
+        startMenu.Update();
+
+        if (startMenu.IsGameStartSelected() && IsKeyPressed(KEY_ENTER)){
+            
+            break;
+        }
+        else if (startMenu.IsGameQuitSelected() && IsKeyPressed(KEY_ENTER)){
+            
+            CloseWindow();
+            break;
+        }
+
+        BeginDrawing();
+        startMenu.Draw();
+        EndDrawing();
+    }
     // Main game loop
     while (!WindowShouldClose()) {
         BeginDrawing();
