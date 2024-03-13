@@ -15,11 +15,35 @@ Vector2 Euler(Vector2 a, float h)
     return createVector2(0.0f, a.y * h);    
 }
 
-const Vector2 Gravity = createVector2(0.0f, -2.625f);
+Vector2 Gravity = createVector2(0.0f, -2.625f);
+
+void Collision_Sky(Ship& ship)
+{
+    ship.v.y -= ship.v.y; 
+    ship.f.y = (ship.f.y - 10) - ship.f.y;
+}
+ 
+void Collision_Ground(Ship& ship)
+{
+   
+   ship.v.y -= ship.v.y; 
+   ship.f.y = (ship.f.y + 10) - ship.f.y;
+    
+}
 
 void SetForce(Ship& ship)
 {    
     ship.f.y = (Gravity.y + ship.Thrust.y) * ship.mass;
+
+    if(ship.position.y >= 660.0f && ship.v.y < 0.0f )
+    {                
+        Collision_Ground(ship);
+    }
+
+    if(ship.position.y <= 0.0f && ship.v.y > 0.0f )
+    {
+        Collision_Sky(ship);
+    }
 }
 
 void ApplyEuler(Ship& ship, float deltaTime)
@@ -31,7 +55,7 @@ void ApplyEuler(Ship& ship, float deltaTime)
 }
 
 void ApplyGravity(Ship& ship, float deltaTime)
-{
-    SetForce(ship);
-    ApplyEuler(ship, deltaTime);
+{   
+       SetForce(ship);
+       ApplyEuler(ship, deltaTime);    
 }

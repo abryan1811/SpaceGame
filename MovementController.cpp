@@ -4,26 +4,20 @@ MovementController::MovementController(float moveSpeed, float initialAltitude)
         : moveSpeed(moveSpeed), initialAltitude(initialAltitude) {}
 
 void MovementController::UpdatePosition(Ship& ship, float& altitudeCounter, float deltaTime, Vector2 gravity)
-{
-    if (IsKeyDown(KEY_W) && altitudeCounter < 100 && ship.Thrust.y <= 10) 
+{    
+    if (IsKeyDown(KEY_W) && altitudeCounter > 0.0f) //Activate thrusters
     {
-        ship.Thrust.y += 3.5f * deltaTime;  
+        if(ship.Thrust.y <= 30)
+        {
+            ship.Thrust.y += 2.3f * deltaTime; 
+        }         
     }
-    else
+
+    if(!IsKeyDown(KEY_W)) // Removes upwards inertia after thruster's stop
     {
         if(ship.Thrust.y >= 0)
         {
-            ship.Thrust.y += (gravity.y * 9) * deltaTime;
+            ship.Thrust.y =- 5.3f;
         }        
     }
-
-    //     // This finds the highest the ship can go to, compares it to where the ship is, if it matches up, it stops it going any higher
-    //     // altitudeCounter = 100.0f * (initialAltitude - position.y) / initialAltitude;
-
-    //     // if (altitudeCounter > 100.0f) 
-    //     // {
-    //     //     altitudeCounter = 100.0f;
-    //     //     position.y = 0;
-    //     // }
 }
-

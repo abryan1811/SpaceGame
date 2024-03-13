@@ -1,5 +1,6 @@
 #include "Physicis/Gravity.cpp"
 
+
 int main() {
     int windowWidth = 800;
     int windowHeight = 800;
@@ -40,7 +41,6 @@ int main() {
     // Use to check the ship has a safe landing
     const float StarterPosition = shipData.position.y;
 
-    float heightCounter = 0.0f;
     const float moveSpeed = 100.0f;
     const float deltaTime = 0.06f; // 1 frame every 0.06ms, reflecting 60fps
 
@@ -51,9 +51,10 @@ int main() {
         BeginDrawing();
         ClearBackground(BLACK);
 
-        ApplyGravity(shipData, deltaTime);
         
-        movementController.UpdatePosition(shipData, heightCounter, deltaTime, Gravity);        
+        ApplyGravity(shipData, deltaTime);        
+        
+        movementController.UpdatePosition(shipData, shipData.position.y, deltaTime, Gravity);        
 
         DrawTexturePro(spaceBackground, sourceSpaceBGRec, destinationSpaceBGRec, backgroundOrigin, 0.0f, WHITE);
 
@@ -63,7 +64,7 @@ int main() {
         // Draw the ground rectangle
         DrawRectangle(0, floorPositionY, windowWidth, 10, WHITE);
 
-        DrawText(TextFormat("Height: %0.2f miles", shipData.position.y), 10, 10, 20, WHITE);
+        DrawText(TextFormat("Height: %0.2f miles", shipData.position.y), 10, 10, 20, WHITE);        
        
         EndDrawing();
     }
