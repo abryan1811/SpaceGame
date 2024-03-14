@@ -83,7 +83,8 @@ int main() {
         // Draw the ground rectangle
         DrawRectangle(0, floorPositionY, windowWidth, 10, WHITE);
 
-        DrawText(TextFormat("Height: %0.2f miles", shipData.position.y), 10, 10, 20, WHITE);        
+        DrawText(TextFormat("Height: %0.2f miles", shipData.position.y), 10, 10, 20, WHITE);   
+        DrawText(TextFormat("Fuel: %0.2f Liters", shipData.fuel), 10, 30, 20, WHITE);      
        
         EndDrawing();
     }

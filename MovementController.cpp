@@ -5,19 +5,18 @@ MovementController::MovementController(float moveSpeed, float initialAltitude)
 
 void MovementController::UpdatePosition(Ship& ship, float& altitudeCounter, float deltaTime, Vector2 gravity)
 {    
-    if (IsKeyDown(KEY_W) && altitudeCounter > 0.0f) //Activate thrusters
+    if (IsKeyDown(KEY_W) && altitudeCounter > 0.0f && ship.fuel > 0 ) //Activate thrusters
     {
-        if(ship.Thrust.y <= 30)
+        if(ship.Thrust.y <= 25)
         {
-            ship.Thrust.y += 2.3f * deltaTime; 
-        }         
+            ship.Thrust.y += ship.Thrust_value;             
+        }
+
+        ship.fuel -= ship.engine_FuelConsumption;  
     }
 
-    if(!IsKeyDown(KEY_W)) // Removes upwards inertia after thruster's stop
+    else // Removes upwards inertia after thruster's stop
     {
-        if(ship.Thrust.y >= 0)
-        {
-            ship.Thrust.y =- 5.3f;
-        }        
+         ship.Thrust.y = 0.0f;             
     }
 }

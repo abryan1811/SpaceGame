@@ -15,7 +15,7 @@ Vector2 Euler(Vector2 a, float h)
     return createVector2(0.0f, a.y * h);    
 }
 
-Vector2 Gravity = createVector2(0.0f, -2.625f);
+Vector2 Gravity = createVector2(0.0f, -10.625f);
 
 void Collision_Sky(Ship& ship)
 {
