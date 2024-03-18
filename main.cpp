@@ -1,5 +1,6 @@
 #include "Physicis/Gravity.cpp"
 #include "StartMenu.h"
+#include "ObstacleCollisions.h"
 
 
 int main() {
@@ -44,7 +45,13 @@ int main() {
     const float StarterPosition = shipData.position.y;
 
     const float moveSpeed = 100.0f;
-    const float deltaTime = 0.06f; // 1 frame every 0.06ms, reflecting 60fps
+    float deltaTime = 0.06f; // 1 frame every 0.06ms, reflecting 60fps
+
+    // Asteroid Texture
+
+    Texture2D asteroids = LoadTexture("Assets/animated_asteroid.png");
+
+    Asteroid asteroid({400, -100}, asteroids, 150.0f, 0.5f);
 
     MovementController movementController(moveSpeed, StarterPosition);
 
@@ -65,27 +72,32 @@ int main() {
         startMenu.Draw();
         EndDrawing();
     }
-    // Main game loop
+    // Main game loop 
     while (!WindowShouldClose()) {
+
         BeginDrawing();
         ClearBackground(BLACK);
-
         
+        // Update and Draw Asteroid
+        asteroid.Update(deltaTime);
+       
+
+        // Reset asteroid position if it goes off-screen
+        if (asteroid.IsOffScreen(windowHeight)) {
+            // ToDo Add replacement asteroids (randomise every asteroid after the first one)
+            // I should sort out a reference/pointer here so just one bit of memory is reserved for the asteroids on screen. 
+        }
+
+        // // ship and drawing logic here
         ApplyGravity(shipData, deltaTime);        
-        
         movementController.UpdatePosition(shipData, shipData.position.y, deltaTime, Gravity);        
-
         DrawTexturePro(spaceBackground, sourceSpaceBGRec, destinationSpaceBGRec, backgroundOrigin, 0.0f, WHITE);
-
-        // Draw the spaceship texture
         DrawTextureEx(shipData.texture, shipData.position, 0.0f, scale, WHITE);
-       
-        // Draw the ground rectangle
         DrawRectangle(0, floorPositionY, windowWidth, 10, WHITE);
-
         DrawText(TextFormat("Height: %0.2f miles", shipData.position.y), 10, 10, 20, WHITE);   
-        DrawText(TextFormat("Fuel: %0.2f Liters", shipData.fuel), 10, 30, 20, WHITE);      
-       
+        DrawText(TextFormat("Fuel: %0.2f Liters", shipData.fuel), 10, 30, 20, WHITE); 
+        asteroid.Draw();     
+
         EndDrawing();
     }
 
