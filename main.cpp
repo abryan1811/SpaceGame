@@ -84,8 +84,9 @@ int main() {
 
         // Reset asteroid position if it goes off-screen
         if (asteroid.IsOffScreen(windowHeight)) {
-            // ToDo Add replacement asteroids (randomise every asteroid after the first one)
-            // I should sort out a reference/pointer here so just one bit of memory is reserved for the asteroids on screen. 
+            int textureWidth = asteroid.texture.width / 16;
+            asteroid.position.x = GetRandomValue(0, windowWidth - textureWidth);
+            asteroid.position.y = -asteroid.texture.height;
         }
 
         // // ship and drawing logic here
