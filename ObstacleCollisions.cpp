@@ -1,5 +1,9 @@
 #include "ObstacleCollisions.h"
 
+    Rectangle Asteroid::GetAsteroidRectangle() const {
+        return (Rectangle){ position.x, position.y, sourceRect.width * scale, sourceRect.height * scale };
+    }
+
     // Initialiser list to set up member variables from the constructor for more usage in the code.
     Asteroid::Asteroid(Vector2 startPos, Texture2D tex, float spd, float scl)
     : position(startPos), texture(tex), speed(spd), scale(scl), frame(0), updateTime(1.0f / 16.0f), runningTime(0.0f) {

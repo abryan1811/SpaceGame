@@ -19,6 +19,8 @@ public:
     void Draw();
     bool IsOffScreen(int windowHeight);
 
+    Rectangle GetAsteroidRectangle() const;
+
 private:
     void UpdateFrame(float deltaTime);
 };

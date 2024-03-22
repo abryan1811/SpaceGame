@@ -1,5 +1,10 @@
 #include "MovementController.h"
 
+ Rectangle MovementController::GetShipRectangle(const Ship& ship) {
+        float scale = 2.0f;
+        return (Rectangle){ship.position.x, ship.position.y, ship.texture.width * scale, ship.texture.height * scale };
+    }
+
 MovementController::MovementController(float moveSpeed, float initialAltitude) 
         : moveSpeed(moveSpeed), initialAltitude(initialAltitude) {}
 
