@@ -1,3 +1,5 @@
+#ifndef Lander_H // header guard
+#define Lander_H
 #include <raylib.h>
 
 struct Ship
@@ -5,8 +7,10 @@ struct Ship
     Texture2D texture;
     Rectangle rec;   
     
-    float Thrust_value = 2.3f;
-    Vector2 Thrust;    
+    const float Thrust_value = 1.3f;
+    const float SideThrust_Value = 0.1f;
+
+    Vector2 Thrust;  
     float mass;
     Vector2 f; // Force
     Vector2 position;
@@ -14,6 +18,7 @@ struct Ship
     Vector2 v; //Current Speed
     Vector2 dv; //Speed changed within the frame
 
-    float fuel = 100.0f;
+    float fuel = 1000.0f;
     const float engine_FuelConsumption = 0.5f;
 };
+#endif //TICKET_H

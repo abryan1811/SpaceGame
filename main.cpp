@@ -1,6 +1,6 @@
 #include "Physicis/Gravity.cpp"
+#include "Physicis/SideBoosters.cpp"
 #include "StartMenu.h"
-
 
 int main() {
     int windowWidth = 800;
@@ -34,11 +34,18 @@ int main() {
     float floorPositionY = windowHeight - 50;
     // shipData.position.y = floorPositionY - scaledHeight + 20; 
     shipData.position.y = 10.0f; 
-    shipData.mass = 1.0f; 
+    shipData.mass = 2.0f; 
+
     shipData.dr.y = 0.0f;
+    shipData.dr.x = 0.0f;
+
     shipData.v.y = 0.0f;
+    shipData.v.x = 0.0f;
+
     shipData.dv.y = 0.0f;
-    shipData.Thrust.y = 0.0f;
+    shipData.dv.x = 0.0f;
+
+    shipData.Thrust.y = 0.0f;    
 
     // Use to check the ship has a safe landing
     const float StarterPosition = shipData.position.y;
@@ -69,11 +76,12 @@ int main() {
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK);
-
+                
+        movementController.UpdatePosition(shipData, shipData.position.y, deltaTime);
+        ApplyGravity(shipData, deltaTime); 
         
-        ApplyGravity(shipData, deltaTime);        
-        
-        movementController.UpdatePosition(shipData, shipData.position.y, deltaTime, Gravity);        
+        movementController.UpdatePosition_Side(shipData,deltaTime);      
+        ApplySideBoosters(shipData, deltaTime);  
 
         DrawTexturePro(spaceBackground, sourceSpaceBGRec, destinationSpaceBGRec, backgroundOrigin, 0.0f, WHITE);
 
@@ -84,7 +92,10 @@ int main() {
         DrawRectangle(0, floorPositionY, windowWidth, 10, WHITE);
 
         DrawText(TextFormat("Height: %0.2f miles", shipData.position.y), 10, 10, 20, WHITE);   
-        DrawText(TextFormat("Fuel: %0.2f Liters", shipData.fuel), 10, 30, 20, WHITE);      
+        DrawText(TextFormat("Fuel: %0.2f Liters", shipData.fuel), 10, 30, 20, WHITE);     
+        DrawText(TextFormat("side: %0.2f ", shipData.position.x), 10, 40, 20, WHITE);   
+        DrawText(TextFormat("forceX: %0.2f ", shipData.f.x), 10, 70, 20, WHITE);
+        DrawText(TextFormat("ThrustX: %0.2f ", shipData.Thrust.x), 10, 85, 20, WHITE);
        
         EndDrawing();
     }
