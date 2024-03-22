@@ -1,6 +1,8 @@
 #include "Physicis/Gravity.cpp"
 #include "Physicis/SideBoosters.cpp"
 #include "StartMenu.h"
+#include "ObstacleCollisions.h"
+   
 
 int main() {
     int windowWidth = 800;
@@ -50,10 +52,19 @@ int main() {
     // Use to check the ship has a safe landing
     const float StarterPosition = shipData.position.y;
 
+    bool isGameOver = false;
+
     const float moveSpeed = 100.0f;
-    const float deltaTime = 0.06f; // 1 frame every 0.06ms, reflecting 60fps
+    float deltaTime = 0.06f; // 1 frame every 0.06ms, reflecting 60fps
+
+    // Asteroid Texture
+
+    Texture2D asteroids = LoadTexture("Assets/animated_asteroid.png");
+
+    Asteroid asteroid({100, -100}, asteroids, 150.0f, 0.5f);
 
     MovementController movementController(moveSpeed, StarterPosition);
+   
 
     while (!WindowShouldClose()) {
         startMenu.Update();
@@ -72,32 +83,60 @@ int main() {
         startMenu.Draw();
         EndDrawing();
     }
-    // Main game loop
+    // Main game loop 
     while (!WindowShouldClose()) {
+        if (!isGameOver){
         BeginDrawing();
         ClearBackground(BLACK);
-                
-        movementController.UpdatePosition(shipData, shipData.position.y, deltaTime);
-        ApplyGravity(shipData, deltaTime); 
+        
+        // Update and Draw Asteroid
+        asteroid.Update(deltaTime);       
+
+        // Reset asteroid position if it goes off-screen
+        if (asteroid.IsOffScreen(windowHeight)) {
+            int textureWidth = asteroid.texture.width / 16;
+            asteroid.position.x = GetRandomValue(0, windowWidth - textureWidth);
+            asteroid.position.y = -asteroid.texture.height;
+        }
+        
+        
+        // // ship and drawing logic here
+        ApplyGravity(shipData, deltaTime);        
+        movementController.UpdatePosition(shipData, shipData.position.y, deltaTime);     
+        Rectangle shipRect = MovementController::GetShipRectangle(shipData);   
+        Rectangle asteroidRect = asteroid.GetAsteroidRectangle();
+
         
         movementController.UpdatePosition_Side(shipData,deltaTime);      
         ApplySideBoosters(shipData, deltaTime);  
 
         DrawTexturePro(spaceBackground, sourceSpaceBGRec, destinationSpaceBGRec, backgroundOrigin, 0.0f, WHITE);
-
-        // Draw the spaceship texture
         DrawTextureEx(shipData.texture, shipData.position, 0.0f, scale, WHITE);
-       
-        // Draw the ground rectangle
         DrawRectangle(0, floorPositionY, windowWidth, 10, WHITE);
-
-        DrawText(TextFormat("Height: %0.2f miles", shipData.position.y), 10, 10, 20, WHITE);   
+        //DrawText(TextFormat("Height: %0.2f miles", shipData.position.y), 10, 10, 20, WHITE);   
+        DrawText(TextFormat("Fuel: %0.2f Liters", shipData.fuel), 10, 30, 20, WHITE); 
         DrawText(TextFormat("Fuel: %0.2f Liters", shipData.fuel), 10, 30, 20, WHITE);     
         DrawText(TextFormat("side: %0.2f ", shipData.position.x), 10, 40, 20, WHITE);   
         DrawText(TextFormat("forceX: %0.2f ", shipData.f.x), 10, 70, 20, WHITE);
         DrawText(TextFormat("ThrustX: %0.2f ", shipData.Thrust.x), 10, 85, 20, WHITE);
        
-        EndDrawing();
+        if (CheckCollisionRecs(shipRect, asteroidRect)){
+            // Just for testing, will need to add destruction of ship and replace with explosion.
+            isGameOver = true;
+        }
+
+        
+           asteroid.Draw(); 
+           
+           EndDrawing();
+        }     
+        
+        else if (isGameOver){
+            BeginDrawing();
+            ClearBackground(BLACK);           
+            DrawText("Game Over!", 50, 400, 100, RED);
+            EndDrawing();
+        }
     }
 
     // De-Initialization

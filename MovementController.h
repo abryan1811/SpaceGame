@@ -8,6 +8,7 @@ class MovementController{
     // main as we only need the ones in main shipdata's position and the heightCounter in there)
     void UpdatePosition(Ship& ship, float& altitudeCounter, float deltaTime);
     void UpdatePosition_Side(Ship& ship, float deltaTime);
+    static Rectangle GetShipRectangle(const Ship& ship);
 
     private:
     float moveSpeed;
