@@ -26,23 +26,15 @@ void ApplyEuler_Side(Ship& ship, float dealtaTime)
     ship.v.x = ship.v.x + ship.dv.x;
     ship.dr.x = ship.v.x * dealtaTime;
 
+    ship.dr.x = std::abs(ship.dr.x); // This value should not be negative, hence why I'm setting it to 'absolute'
+
     if(ship.Thrust.x > 0.0f)
     {
-        if(ship.dr.x < 0)
-        {
-            ship.dr.x = std::abs(ship.dr.x); 
-        }
-
         ship.position.x = ship.position.x + ship.dr.x;
     }
 
     if(ship.Thrust.x < 0.0f)
     {
-        if(ship.dr.x < 0)
-        {
-            ship.dr.x = std::abs(ship.dr.x); 
-        }
-
         ship.position.x = ship.position.x - ship.dr.x;
     }
 }

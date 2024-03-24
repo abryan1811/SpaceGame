@@ -33,26 +33,25 @@ void MovementController::UpdatePosition(Ship& ship, float& altitudeCounter, floa
 
 void MovementController::UpdatePosition_Side(Ship& ship, float deltaTime)
 {
-    if (IsKeyDown(KEY_D) && ship.fuel > 0) //MOVING LEFT
+    if (IsKeyDown(KEY_A) && ship.fuel > 0) //MOVING LEFT
     {  
-        ship.Thrust.x -= ship.SideThrust_Value;                      
+        if(ship.Thrust.x > -7)
+        {
+            ship.Thrust.x -= ship.SideThrust_Value; 
+        }                             
     }
 
-    else if (IsKeyDown(KEY_A) && ship.fuel > 0) //MOVING RIGHT
+    else if (IsKeyDown(KEY_D) && ship.fuel > 0) //MOVING RIGHT
     {  
-        ship.Thrust.x += ship.SideThrust_Value;                               
+        if(ship.Thrust.x < 7)
+        {            
+            ship.Thrust.x += ship.SideThrust_Value;  
+        }                             
     }
 
     else
-    {       
-       ship.Thrust.x = 0.0f;
-       ship.f.x = 0.0f;
-       ship.dr.x = 0.0f;
-
-       if(ship.v.x > 0 )
-       {
-        ship.v.x -= 0.5f;
-       }
-       
+    {  
+        ship.Thrust.x = 0.0f;      
+        ship.v.x = 0.0f;
     }
 }

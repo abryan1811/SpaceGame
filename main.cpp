@@ -100,15 +100,16 @@ int main() {
         }
         
         
-        // // ship and drawing logic here
-        ApplyGravity(shipData, deltaTime);        
-        movementController.UpdatePosition(shipData, shipData.position.y, deltaTime);     
+        // // ship and drawing logic here               
+        movementController.UpdatePosition(shipData, shipData.position.y, deltaTime); 
+        ApplyGravity(shipData, deltaTime); 
+        movementController.UpdatePosition_Side(shipData,deltaTime);      
+        ApplySideBoosters(shipData, deltaTime); 
         Rectangle shipRect = MovementController::GetShipRectangle(shipData);   
         Rectangle asteroidRect = asteroid.GetAsteroidRectangle();
 
         
-        movementController.UpdatePosition_Side(shipData,deltaTime);      
-        ApplySideBoosters(shipData, deltaTime);  
+         
 
         DrawTexturePro(spaceBackground, sourceSpaceBGRec, destinationSpaceBGRec, backgroundOrigin, 0.0f, WHITE);
         DrawTextureEx(shipData.texture, shipData.position, 0.0f, scale, WHITE);
@@ -119,6 +120,10 @@ int main() {
         DrawText(TextFormat("side: %0.2f ", shipData.position.x), 10, 40, 20, WHITE);   
         DrawText(TextFormat("forceX: %0.2f ", shipData.f.x), 10, 70, 20, WHITE);
         DrawText(TextFormat("ThrustX: %0.2f ", shipData.Thrust.x), 10, 85, 20, WHITE);
+        DrawText(TextFormat("DV: %0.2f ", shipData.dv.x), 10, 105, 20, WHITE);
+        DrawText(TextFormat("V: %0.2f ", shipData.v.x), 10, 135, 20, WHITE);
+        DrawText(TextFormat("DR: %0.2f ", shipData.dr.x), 10, 155, 20, WHITE);
+
        
         if (CheckCollisionRecs(shipRect, asteroidRect)){
             // Just for testing, will need to add destruction of ship and replace with explosion.
