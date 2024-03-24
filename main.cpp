@@ -3,6 +3,34 @@
 #include "StartMenu.h"
 #include "ObstacleCollisions.h"
    
+bool CheckTouchDown(Ship& ship)
+{
+    if(ship.position.y >= 658.0f && ship.v.y < 0.0f )
+    {                
+        if(ship.v.y > ship.RequiredLandingSpeed ) // Required landing speed
+        {
+            return true;
+        }               
+    }
+
+    return false;    
+}
+
+void SuccessMessage()
+{
+    BeginDrawing();
+    ClearBackground(BLACK);           
+    DrawText("Mission Success!", 50, 400, 100, GREEN);
+    EndDrawing();
+}
+
+void FailMessage()
+{
+    BeginDrawing();
+    ClearBackground(BLACK);           
+    DrawText("Game Over!", 50, 400, 100, RED);
+    EndDrawing();
+}
 
 int main() {
     int windowWidth = 800;
@@ -52,7 +80,8 @@ int main() {
     // Use to check the ship has a safe landing
     const float StarterPosition = shipData.position.y;
 
-    bool isGameOver = false;
+    bool isGameOver_Fail = false;
+    bool isGameOVer_Success = false;
 
     const float moveSpeed = 100.0f;
     float deltaTime = 0.06f; // 1 frame every 0.06ms, reflecting 60fps
@@ -84,8 +113,10 @@ int main() {
         EndDrawing();
     }
     // Main game loop 
-    while (!WindowShouldClose()) {
-        if (!isGameOver){
+    while (!WindowShouldClose())
+    {
+        if (!isGameOver_Fail && !isGameOVer_Success)
+        {
         BeginDrawing();
         ClearBackground(BLACK);
         
@@ -97,8 +128,7 @@ int main() {
             int textureWidth = asteroid.texture.width / 16;
             asteroid.position.x = GetRandomValue(0, windowWidth - textureWidth);
             asteroid.position.y = -asteroid.texture.height;
-        }
-        
+        }        
         
         // // ship and drawing logic here               
         movementController.UpdatePosition(shipData, shipData.position.y, deltaTime); 
@@ -106,42 +136,46 @@ int main() {
         movementController.UpdatePosition_Side(shipData,deltaTime);      
         ApplySideBoosters(shipData, deltaTime); 
         Rectangle shipRect = MovementController::GetShipRectangle(shipData);   
-        Rectangle asteroidRect = asteroid.GetAsteroidRectangle();
-
-        
-         
+        Rectangle asteroidRect = asteroid.GetAsteroidRectangle();                 
 
         DrawTexturePro(spaceBackground, sourceSpaceBGRec, destinationSpaceBGRec, backgroundOrigin, 0.0f, WHITE);
         DrawTextureEx(shipData.texture, shipData.position, 0.0f, scale, WHITE);
         DrawRectangle(0, floorPositionY, windowWidth, 10, WHITE);
-        //DrawText(TextFormat("Height: %0.2f miles", shipData.position.y), 10, 10, 20, WHITE);   
+        DrawText(TextFormat("Height: %0.2f miles", shipData.position.y), 10, 10, 20, WHITE); // THIS IS UPSIDE DOWN... NEEDS FIXING  
         DrawText(TextFormat("Fuel: %0.2f Liters", shipData.fuel), 10, 30, 20, WHITE); 
-        DrawText(TextFormat("Fuel: %0.2f Liters", shipData.fuel), 10, 30, 20, WHITE);     
-        DrawText(TextFormat("side: %0.2f ", shipData.position.x), 10, 40, 20, WHITE);   
-        DrawText(TextFormat("forceX: %0.2f ", shipData.f.x), 10, 70, 20, WHITE);
-        DrawText(TextFormat("ThrustX: %0.2f ", shipData.Thrust.x), 10, 85, 20, WHITE);
-        DrawText(TextFormat("DV: %0.2f ", shipData.dv.x), 10, 105, 20, WHITE);
-        DrawText(TextFormat("V: %0.2f ", shipData.v.x), 10, 135, 20, WHITE);
-        DrawText(TextFormat("DR: %0.2f ", shipData.dr.x), 10, 155, 20, WHITE);
-
-       
-        if (CheckCollisionRecs(shipRect, asteroidRect)){
+               
+        if (CheckCollisionRecs(shipRect, asteroidRect))
+        {
             // Just for testing, will need to add destruction of ship and replace with explosion.
-            isGameOver = true;
-        }
+            isGameOver_Fail = true;
+        }                      
 
-        
-           asteroid.Draw(); 
+        asteroid.Draw(); 
            
-           EndDrawing();
+        EndDrawing();
         }     
         
-        else if (isGameOver){
-            BeginDrawing();
-            ClearBackground(BLACK);           
-            DrawText("Game Over!", 50, 400, 100, RED);
-            EndDrawing();
+        else if (isGameOver_Fail == true)
+        {
+            FailMessage();
+        }       
+
+    if(shipData.position.y >= 658.0f && shipData.v.y < 0.0f )
+    {
+        isGameOVer_Success= CheckTouchDown(shipData);
+        
+        switch (isGameOVer_Success == true)
+        {
+            case true:
+            SuccessMessage();
+            break;
+        
+            case false:
+            isGameOver_Fail = true;
+            FailMessage();        
+            break;
         }
+    }
     }
 
     // De-Initialization

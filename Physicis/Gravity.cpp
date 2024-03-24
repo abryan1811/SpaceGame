@@ -24,20 +24,18 @@ void Collision_Sky(Ship& ship)
 }
  
 void Collision_Ground(Ship& ship)
-{
-   
+{ 
    ship.v.y -= ship.v.y; 
-   ship.f.y = (ship.f.y + 10) - ship.f.y;
-    
+   ship.f.y = (ship.f.y + 10) - ship.f.y;    
 }
 
 void SetForce(Ship& ship)
 {    
     ship.f.y = (Gravity.y + ship.Thrust.y) * ship.mass;    
 
-    if(ship.position.y >= 660.0f && ship.v.y < 0.0f )
-    {                
-        Collision_Ground(ship);
+    if(ship.position.y >= 658.0f && ship.v.y < 0.0f )
+    {
+        Collision_Ground(ship); 
     }
 
     if(ship.position.y <= 0.0f && ship.v.y > 0.0f )
