@@ -8,18 +8,19 @@ struct Ship
     Rectangle rec;   
     
     const float Thrust_value = 1.3f;
-    const float SideThrust_Value = 0.1f;
-    const float RequiredLandingSpeed = -15.0f;
+    const float SideThrust_Value = 5.0f;
+    const float RequiredLandingSpeed = -30.0f;
 
     Vector2 Thrust;  
-    float mass;
+    float ship_baseWeight;
+    float mass = 0.1f;
     Vector2 f; // Force
     Vector2 position;
     Vector2 dr; //Position Change within the frame
     Vector2 v; //Current Speed
     Vector2 dv; //Speed changed within the frame
 
-    float fuel = 100.0f;
+    float fuel = 1000.0f;
     float engine_FuelConsumption = 0.5f;
 };
 #endif //TICKET_H

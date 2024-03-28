@@ -64,7 +64,7 @@ int main() {
     float floorPositionY = windowHeight - 50;
     // shipData.position.y = floorPositionY - scaledHeight + 20; 
     shipData.position.y = 10.0f; 
-    shipData.mass = 2.0f; 
+    // shipData.mass = 2.0f; 
 
     shipData.dr.y = 0.0f;
     shipData.dr.x = 0.0f;
@@ -121,14 +121,14 @@ int main() {
         ClearBackground(BLACK);
         
         // Update and Draw Asteroid
-        asteroid.Update(deltaTime);       
+        // asteroid.Update(deltaTime);       
 
         // Reset asteroid position if it goes off-screen
-        if (asteroid.IsOffScreen(windowHeight)) {
-            int textureWidth = asteroid.texture.width / 16;
-            asteroid.position.x = GetRandomValue(0, windowWidth - textureWidth);
-            asteroid.position.y = -asteroid.texture.height;
-        }        
+        // if (asteroid.IsOffScreen(windowHeight)) {
+        //     int textureWidth = asteroid.texture.width / 16;
+        //     asteroid.position.x = GetRandomValue(0, windowWidth - textureWidth);
+        //     asteroid.position.y = -asteroid.texture.height;
+        // }        
         
         // // ship and drawing logic here               
         movementController.UpdatePosition(shipData, shipData.position.y, deltaTime); 
@@ -143,6 +143,8 @@ int main() {
         DrawRectangle(0, floorPositionY, windowWidth, 10, WHITE);
         DrawText(TextFormat("Height: %0.2f miles", shipData.position.y), 10, 10, 20, WHITE); // THIS IS UPSIDE DOWN... NEEDS FIXING  
         DrawText(TextFormat("Fuel: %0.2f Liters", shipData.fuel), 10, 30, 20, WHITE); 
+        DrawText(TextFormat("DR: %0.2f Liters", shipData.dr.x), 10, 55, 20, WHITE); 
+        DrawText(TextFormat("Position_X: %0.2f Liters", shipData.position.x), 10, 70, 20, WHITE); 
                
         if (CheckCollisionRecs(shipRect, asteroidRect))
         {

@@ -37,7 +37,7 @@ void MovementController::UpdatePosition_Side(Ship& ship, float deltaTime)
     {  
         if(ship.Thrust.x > -7)
         {
-            ship.Thrust.x -= ship.SideThrust_Value; 
+            ship.Thrust.x = -ship.SideThrust_Value; 
         }                             
     }
 
@@ -45,13 +45,13 @@ void MovementController::UpdatePosition_Side(Ship& ship, float deltaTime)
     {  
         if(ship.Thrust.x < 7)
         {            
-            ship.Thrust.x += ship.SideThrust_Value;  
+            ship.Thrust.x = ship.SideThrust_Value;  
         }                             
     }
 
-    else
-    {  
-        ship.Thrust.x = 0.0f;      
-        ship.v.x = 0.0f;
-    }
+    // else
+    // {  
+    //     ship.Thrust.x = 0.0f;      
+    //     ship.v.x = 0.0f;
+    // }
 }

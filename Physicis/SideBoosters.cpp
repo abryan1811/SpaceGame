@@ -24,19 +24,8 @@ void ApplyEuler_Side(Ship& ship, float dealtaTime)
 {  
     ship.dv = Euler_Side(createVector2_Side(ship.f.x / ship.mass, 0.0f), dealtaTime);      
     ship.v.x = ship.v.x + ship.dv.x;
-    ship.dr.x = ship.v.x * dealtaTime;
-
-    ship.dr.x = std::abs(ship.dr.x); // This value should not be negative, hence why I'm setting it to 'absolute'
-
-    if(ship.Thrust.x > 0.0f)
-    {
-        ship.position.x = ship.position.x + ship.dr.x;
-    }
-
-    if(ship.Thrust.x < 0.0f)
-    {
-        ship.position.x = ship.position.x - ship.dr.x;
-    }
+    ship.dr.x = ship.v.x * dealtaTime; 
+    ship.position.x += ship.dr.x;    
 }
 
 void ApplySideBoosters(Ship& ship, float dealtTime)
