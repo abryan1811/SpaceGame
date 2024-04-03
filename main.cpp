@@ -2,6 +2,7 @@
 #include "Physicis/SideBoosters.cpp"
 #include "StartMenu.h"
 #include "ObstacleCollisions.h"
+#include "Physicis/PID.h"
    
 bool CheckTouchDown(Ship& ship)
 {
@@ -133,11 +134,31 @@ int main() {
         //     asteroid.position.y = -asteroid.texture.height;
         // }        
         
+        Pid_Controller VerticalBoosterPID;
+
+        float desiredLandingSpeed =  -20.0f;
+        float error = shipData.v.y - desiredLandingSpeed;
+
+        float output = VerticalBoosterPID.cp * error; 
+
+
+
         // // ship and drawing logic here               
-        movementController.UpdatePosition(shipData, shipData.position.y, deltaTime); 
+        // movementController.UpdatePosition(shipData, shipData.position.y, deltaTime); 
+       
+        movementController.AutoLand_Vertical(shipData,output);
         ApplyGravity(shipData, deltaTime); 
         movementController.UpdatePosition_Side(shipData,deltaTime);      
         ApplySideBoosters(shipData, deltaTime); 
+
+        
+
+        
+
+
+
+        
+
         Rectangle shipRect = MovementController::GetShipRectangle(shipData);   
         Rectangle asteroidRect = asteroid.GetAsteroidRectangle();                 
 
@@ -171,8 +192,7 @@ int main() {
         DrawRectangle(0, floorPositionY, windowWidth, 10, WHITE);
         DrawText(TextFormat("Height: %0.2f miles", (windowHeight - shipData.position.y)), 10, 10, 20, WHITE); // THIS IS UPSIDE DOWN... NEEDS FIXING  
         DrawText(TextFormat("Fuel: %0.2f Liters", shipData.fuel), 10, 30, 20, WHITE); 
-        DrawText(TextFormat("DR: %0.2f Liters", shipData.dr.x), 10, 55, 20, WHITE); 
-        DrawText(TextFormat("Position_X: %0.2f Liters", shipData.position.x), 10, 70, 20, WHITE); 
+        DrawText(TextFormat("Speed: %0.2f Vertical", shipData.v.y), 10, 50, 20, WHITE); 
                
         if (CheckCollisionRecs(shipRect, asteroidRect))
         {
