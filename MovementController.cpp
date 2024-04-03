@@ -12,6 +12,7 @@ void MovementController::UpdatePosition(Ship& ship, float& altitudeCounter, floa
 {    
     if (IsKeyDown(KEY_W) && altitudeCounter > 0.0f && ship.fuel > 0 ) //Activate thrusters
     {
+        thrustOn = true;
         if(ship.Thrust.y <= 20)
         {
             ship.Thrust.y += ship.Thrust_value;             
@@ -22,6 +23,7 @@ void MovementController::UpdatePosition(Ship& ship, float& altitudeCounter, floa
     
     else // Removes upwards inertia after thruster's stop
     {
+        thrustOn = false;
         ship.Thrust.y = 0.0f;
 
         if(ship.v.y > 0 )

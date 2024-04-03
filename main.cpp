@@ -56,6 +56,7 @@ int main() {
     
     Ship shipData;
     shipData.texture = LoadTexture("Assets/ship.png"); 
+    shipData.animatedTexture = LoadTexture("Assets/engineSpriteSheet.png");
     float scale = 2.0f;
     float scaledHeight = shipData.texture.height * scale;
     
@@ -85,6 +86,8 @@ int main() {
 
     const float moveSpeed = 100.0f;
     float deltaTime = 0.06f; // 1 frame every 0.06ms, reflecting 60fps
+
+    int thrustAnimationFrameIndex = 0;
 
     // Asteroid Texture
 
@@ -140,8 +143,33 @@ int main() {
 
         DrawTexturePro(spaceBackground, sourceSpaceBGRec, destinationSpaceBGRec, backgroundOrigin, 0.0f, WHITE);
         DrawTextureEx(shipData.texture, shipData.position, 0.0f, scale, WHITE);
+               
+
+        thrustAnimationFrameIndex = (thrustAnimationFrameIndex + 1) % 8; // Update this each frame to cycle through images 
+
+        Rectangle sourceRec = {
+            (float)(thrustAnimationFrameIndex * (shipData.animatedTexture.width / 8)),
+            0.0f,
+            (float)(shipData.animatedTexture.width / 8),
+            (float)shipData.animatedTexture.height
+        };
+
+        Rectangle destRec = {
+            shipData.position.x,
+            shipData.position.y,
+            sourceRec.width * scale, 
+            sourceRec.height * scale 
+        };
+      
+        Vector2 origin = {0, 0};
+
+        if (movementController.thrustOn){
+        // Draw the current frame of the animation with scaling
+        DrawTexturePro(shipData.animatedTexture, sourceRec, destRec, origin, 0.0f, WHITE);
+        }
+
         DrawRectangle(0, floorPositionY, windowWidth, 10, WHITE);
-        DrawText(TextFormat("Height: %0.2f miles", shipData.position.y), 10, 10, 20, WHITE); // THIS IS UPSIDE DOWN... NEEDS FIXING  
+        DrawText(TextFormat("Height: %0.2f miles", (windowHeight - shipData.position.y)), 10, 10, 20, WHITE); // THIS IS UPSIDE DOWN... NEEDS FIXING  
         DrawText(TextFormat("Fuel: %0.2f Liters", shipData.fuel), 10, 30, 20, WHITE); 
         DrawText(TextFormat("DR: %0.2f Liters", shipData.dr.x), 10, 55, 20, WHITE); 
         DrawText(TextFormat("Position_X: %0.2f Liters", shipData.position.x), 10, 70, 20, WHITE); 

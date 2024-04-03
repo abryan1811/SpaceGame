@@ -5,6 +5,7 @@
 struct Ship
 {
     Texture2D texture;
+    Texture2D animatedTexture;
     Rectangle rec;   
     
     const float Thrust_value = 1.3f;

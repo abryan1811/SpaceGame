@@ -9,6 +9,7 @@ class MovementController{
     void UpdatePosition(Ship& ship, float& altitudeCounter, float deltaTime);
     void UpdatePosition_Side(Ship& ship, float deltaTime);
     static Rectangle GetShipRectangle(const Ship& ship);
+    bool thrustOn = false;
 
     private:
     float moveSpeed;
