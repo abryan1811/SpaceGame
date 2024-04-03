@@ -49,8 +49,7 @@ void ApplyEuler(Ship& ship, float deltaTime)
     ship.dv = Euler(createVector2(0.0f, ship.f.y * 1 / ship.mass), deltaTime);
     ship.v.y = ship.v.y + ship.dv.y;
     ship.dr.y =  ship.v.y * deltaTime; 
-    ship.position.y = ship.position.y - ship.dr.y;  
-    
+    ship.position.y = ship.position.y - ship.dr.y;      
 }
 
 void ApplyGravity(Ship& ship, float deltaTime)

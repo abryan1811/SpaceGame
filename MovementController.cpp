@@ -54,3 +54,10 @@ void MovementController::UpdatePosition_Side(Ship& ship, float deltaTime)
         ship.Thrust.x = 0.0f;
     }
 }
+
+void MovementController::AutoLand_Vertical(Ship& ship, float pid_output)
+{
+    // ship.Thrust.y = (pid_output * ship.Thrust_value)
+
+    ship.Thrust.y = pid_output * ship.Thrust_value;
+}
