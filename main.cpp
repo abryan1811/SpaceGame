@@ -137,9 +137,14 @@ int main() {
         Pid_Controller VerticalBoosterPID;
 
         float desiredLandingSpeed =  -20.0f;
-        float error = shipData.v.y - desiredLandingSpeed;
 
-        float output = VerticalBoosterPID.cp * error; 
+        VerticalBoosterPID.SetError(desiredLandingSpeed, shipData.v.y);
+
+        float output_P = VerticalBoosterPID.Get_P_output();
+        float output_i = VerticalBoosterPID.Get_I_output(deltaTime);
+        float output = output_i + output_P;
+
+        // float output = VerticalBoosterPID.cp * error; 
 
 
 
@@ -193,7 +198,8 @@ int main() {
         DrawText(TextFormat("Height: %0.2f miles", (windowHeight - shipData.position.y)), 10, 10, 20, WHITE); // THIS IS UPSIDE DOWN... NEEDS FIXING  
         DrawText(TextFormat("Fuel: %0.2f Liters", shipData.fuel), 10, 30, 20, WHITE); 
         DrawText(TextFormat("Speed: %0.2f Vertical", shipData.v.y), 10, 50, 20, WHITE); 
-               
+        DrawText(TextFormat("Speed: %0.2f Vertical", output), 10, 70, 20, RED);        
+        
         if (CheckCollisionRecs(shipRect, asteroidRect))
         {
             // Just for testing, will need to add destruction of ship and replace with explosion.
