@@ -3,7 +3,8 @@
 
 #include "raylib.h"
 
-class Asteroid {
+class Asteroid 
+{
 public:
     Vector2 position;
     Texture2D texture;

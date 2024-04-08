@@ -26,7 +26,7 @@ public:
     {
         float sumResult = 0.0f;
 
-        for(int i = 0; i < capacity; i++)
+        for(size_t i = 0; i < capacity; i++)
         {
             sumResult += buffer[i] * dealtaTime;
         }

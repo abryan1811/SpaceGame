@@ -3,6 +3,7 @@
 #include "StartMenu.h"
 #include "ObstacleCollisions.h"
 #include "Physicis/PID.h"
+#include <thread>
    
 bool CheckTouchDown(Ship& ship)
 {
@@ -33,6 +34,25 @@ void FailMessage()
     EndDrawing();
 }
 
+void ShipDataInit(Ship& ship1, Ship& ship2)
+{
+    ship1.dr.y = 0.0f;
+    ship1.dr.x = 0.0f;
+    ship1.v.y = 0.0f;
+    ship1.v.x = 0.0f;
+    ship1.dv.y = 0.0f;
+    ship1.dv.x = 0.0f;
+    ship1.Thrust.y = 0.0f; 
+
+    ship2.dr.y = 0.0f;
+    ship2.dr.x = 0.0f;
+    ship2.v.y = 0.0f;
+    ship2.v.x = 0.0f;
+    ship2.dv.y = 0.0f;
+    ship2.dv.x = 0.0f;
+    ship2.Thrust.y = 0.0f; 
+}
+
 int main() {
     int windowWidth = 800;
     int windowHeight = 800;
@@ -53,34 +73,33 @@ int main() {
 
     Vector2 backgroundOrigin = {0.0f, 0.0f};
     
-    // Load the spaceship texture
-    
-    Ship shipData;
-    shipData.texture = LoadTexture("Assets/ship.png"); 
-    shipData.animatedTexture = LoadTexture("Assets/engineSpriteSheet.png");
+    // Load the spaceship texture    
+    Ship shipData1;
+    shipData1.texture = LoadTexture("Assets/ship.png"); 
+    shipData1.animatedTexture = LoadTexture("Assets/engineSpriteSheet.png");
     float scale = 2.0f;
-    float scaledHeight = shipData.texture.height * scale;
+    float scaledHeight = shipData1.texture.height * scale;
+
+    Ship shipData2;
+    shipData2.texture = LoadTexture("Assets/ship.png");
+    shipData2.animatedTexture = LoadTexture("Assets/engineSpriteSheet.png");
+    float scale2 = 2.0f;
+    float scaledHeight2 = shipData2.texture.height * scale2;
+
     
     //Object Locations
-    shipData.position.x = windowWidth / 2 - scaledHeight / 2; // Center the ship
-    float floorPositionY = windowHeight - 50;
-    // shipData.position.y = floorPositionY - scaledHeight + 20; 
-    shipData.position.y = 10.0f; 
-    // shipData.mass = 2.0f; 
+    shipData1.position.x = windowWidth / 2 - scaledHeight / 2; // Center the ship
+    float floorPositionY = windowHeight - 50;    
+    shipData1.position.y = 10.0f; 
 
-    shipData.dr.y = 0.0f;
-    shipData.dr.x = 0.0f;
+    shipData2.position.x = windowWidth / 2 - scaledHeight2 / 2; // Center the ship     
+    shipData2.position.x += 20.0f;
+    shipData2.position.y = 10.0f; 
 
-    shipData.v.y = 0.0f;
-    shipData.v.x = 0.0f;
-
-    shipData.dv.y = 0.0f;
-    shipData.dv.x = 0.0f;
-
-    shipData.Thrust.y = 0.0f;    
+    ShipDataInit(shipData1, shipData2);  
 
     // Use to check the ship has a safe landing
-    const float StarterPosition = shipData.position.y;
+    const float StarterPosition = shipData1.position.y;
 
     bool isGameOver_Fail = false;
     bool isGameOVer_Success = false;
@@ -99,7 +118,8 @@ int main() {
     MovementController movementController(moveSpeed, StarterPosition);
    
 
-    while (!WindowShouldClose()) {
+    while (!WindowShouldClose()) 
+    {
         startMenu.Update();
 
         if (startMenu.IsGameStartSelected() && IsKeyPressed(KEY_ENTER)){
@@ -136,9 +156,9 @@ int main() {
         
         Pid_Controller VerticalBoosterPID;
 
-        float desiredLandingSpeed =  -20.0f;
-
-        VerticalBoosterPID.SetError(desiredLandingSpeed, shipData.v.y);
+        float desiredLandingSpeed =  346/17.0f - shipData1.position.y/24.0f;
+        desiredLandingSpeed = std::min(-desiredLandingSpeed,-1.0f);
+        VerticalBoosterPID.SetError(desiredLandingSpeed, shipData1.v.y);
 
         float output_P = VerticalBoosterPID.Get_P_output();
         float output_i = VerticalBoosterPID.Get_I_output(deltaTime);
@@ -149,58 +169,58 @@ int main() {
 
 
         // // ship and drawing logic here               
-        // movementController.UpdatePosition(shipData, shipData.position.y, deltaTime); 
-       
-        movementController.AutoLand_Vertical(shipData,output);
-        ApplyGravity(shipData, deltaTime); 
-        movementController.UpdatePosition_Side(shipData,deltaTime);      
-        ApplySideBoosters(shipData, deltaTime); 
+        // movementController.UpdatePosition_1(shipData1, shipData1.position.y, deltaTime);        
+        movementController.AutoLand_Vertical(shipData1,output);
+        ApplyGravity(shipData1, deltaTime); 
+        movementController.UpdatePosition_2(shipData2, shipData1.position.y, deltaTime);
+        ApplyGravity(shipData2, deltaTime);
 
-        
+        movementController.UpdatePosition_Side_1(shipData1,deltaTime);      
+        ApplySideBoosters(shipData1, deltaTime); 
+        movementController.UpdatePosition_Side_2(shipData2, deltaTime);
+        ApplySideBoosters(shipData2, deltaTime);
 
-        
 
-
-
-        
-
-        Rectangle shipRect = MovementController::GetShipRectangle(shipData);   
+        Rectangle shipRect1 = MovementController::GetShipRectangle(shipData1); 
+        Rectangle shipRect2 = MovementController::GetShipRectangle(shipData2);   
         Rectangle asteroidRect = asteroid.GetAsteroidRectangle();                 
 
         DrawTexturePro(spaceBackground, sourceSpaceBGRec, destinationSpaceBGRec, backgroundOrigin, 0.0f, WHITE);
-        DrawTextureEx(shipData.texture, shipData.position, 0.0f, scale, WHITE);
+        DrawTextureEx(shipData1.texture, shipData1.position, 0.0f, scale, WHITE);
+        DrawTextureEx(shipData2.texture, shipData2.position, 0.0f, scale2, RED);
                
 
         thrustAnimationFrameIndex = (thrustAnimationFrameIndex + 1) % 8; // Update this each frame to cycle through images 
 
         Rectangle sourceRec = {
-            (float)(thrustAnimationFrameIndex * (shipData.animatedTexture.width / 8)),
+            (float)(thrustAnimationFrameIndex * (shipData1.animatedTexture.width / 8)),
             0.0f,
-            (float)(shipData.animatedTexture.width / 8),
-            (float)shipData.animatedTexture.height
+            (float)(shipData1.animatedTexture.width / 8),
+            (float)shipData1.animatedTexture.height
         };
 
         Rectangle destRec = {
-            shipData.position.x,
-            shipData.position.y,
+            shipData1.position.x,
+            shipData1.position.y,
             sourceRec.width * scale, 
             sourceRec.height * scale 
         };
       
         Vector2 origin = {0, 0};
 
-        if (movementController.thrustOn){
+        if (movementController.thrustOn_1)
+        {
         // Draw the current frame of the animation with scaling
-        DrawTexturePro(shipData.animatedTexture, sourceRec, destRec, origin, 0.0f, WHITE);
-        }
+        DrawTexturePro(shipData1.animatedTexture, sourceRec, destRec, origin, 0.0f, WHITE);
+        }        
 
         DrawRectangle(0, floorPositionY, windowWidth, 10, WHITE);
-        DrawText(TextFormat("Height: %0.2f miles", (windowHeight - shipData.position.y)), 10, 10, 20, WHITE); // THIS IS UPSIDE DOWN... NEEDS FIXING  
-        DrawText(TextFormat("Fuel: %0.2f Liters", shipData.fuel), 10, 30, 20, WHITE); 
-        DrawText(TextFormat("Speed: %0.2f Vertical", shipData.v.y), 10, 50, 20, WHITE); 
+        DrawText(TextFormat("Height: %0.2f miles", (windowHeight - shipData1.position.y)), 10, 10, 20, WHITE); // THIS IS UPSIDE DOWN... NEEDS FIXING  
+        DrawText(TextFormat("Fuel: %0.2f Liters", shipData1.fuel), 10, 30, 20, WHITE); 
+        DrawText(TextFormat("Speed: %0.2f Vertical", shipData1.v.y), 10, 50, 20, WHITE); 
         DrawText(TextFormat("Speed: %0.2f Vertical", output), 10, 70, 20, RED);        
         
-        if (CheckCollisionRecs(shipRect, asteroidRect))
+        if(CheckCollisionRecs(shipRect1, asteroidRect) || CheckCollisionRecs(shipRect2, asteroidRect))
         {
             // Just for testing, will need to add destruction of ship and replace with explosion.
             isGameOver_Fail = true;
@@ -216,9 +236,9 @@ int main() {
             FailMessage();
         }       
 
-    if(shipData.position.y >= 658.0f && shipData.v.y < 0.0f )
+    if(shipData1.position.y >= 658.0f && shipData1.v.y < 0.0f )
     {
-        isGameOVer_Success= CheckTouchDown(shipData);
+        isGameOVer_Success= CheckTouchDown(shipData1);
         
         switch (isGameOVer_Success == true)
         {
@@ -235,7 +255,7 @@ int main() {
     }
 
     // De-Initialization
-    UnloadTexture(shipData.texture); // Unload the texture
+    UnloadTexture(shipData1.texture); // Unload the texture
     CloseWindow(); // Close the window
 
     return 0;
