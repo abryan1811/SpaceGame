@@ -50,7 +50,7 @@ class Pid_Controller
     
     const float cp = -1.0f; //Kp
    
-    const float ci = -50.0f;    
+    const float ci = -25.0f;    
 
     const float cd = -1.0f;
 
