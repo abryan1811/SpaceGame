@@ -97,6 +97,8 @@ int main() {
     Asteroid asteroid({100, -100}, asteroids, 150.0f, 0.5f);
 
     MovementController movementController(moveSpeed, StarterPosition);
+
+    Pid_Controller VerticalBoosterPID;
    
 
     while (!WindowShouldClose()) {
@@ -134,15 +136,16 @@ int main() {
         //     asteroid.position.y = -asteroid.texture.height;
         // }        
         
-        Pid_Controller VerticalBoosterPID;
+        
 
-        float desiredLandingSpeed =  346/17.0f - shipData.position.y/24.0f;
+        float desiredLandingSpeed =  346/17.0f - shipData.position.y/24.0f;       
         desiredLandingSpeed = std::min(-desiredLandingSpeed,-1.0f);
         VerticalBoosterPID.SetError(desiredLandingSpeed, shipData.v.y);
 
         float output_P = VerticalBoosterPID.Get_P_output();
         float output_i = VerticalBoosterPID.Get_I_output(deltaTime);
-        float output = output_i + output_P;
+        float output_d = VerticalBoosterPID.Get_D_output(deltaTime);
+        float output = output_i + output_P + output_d;
 
 
         // float output = VerticalBoosterPID.cp * error; 

@@ -26,40 +26,47 @@ public:
     {
         float sumResult = 0.0f;
 
-        for(int i = 0; i < capacity; i++)
+        for(size_t i = 0; i < capacity; i++)
         {
             sumResult += buffer[i] * dealtaTime;
         }
         
         return sumResult;
     }
+        
 };
+
 
 class Pid_Controller
 {
-    const size_t bufferSize = 4;
+    const size_t integralBufferSize = 4;
+    float currentError;
+    float previousError;
 
     public:
     Pid_Controller()
-        :ringBuffer(bufferSize)
+        :IntegralRingBuffer(integralBufferSize), currentError(0.0f), previousError(0.0f)
     {
 
     }
         
-    RingBuffer ringBuffer;
+    RingBuffer IntegralRingBuffer;
     
+
     const float cp = -1.0f; //Kp
    
     const float ci = -25.0f;    
 
-    const float cd = -1.0f;
+    const float cd = 0.3f;
 
     float error = 0.0f;
 
     void SetError(float desiredValue, float measuredValue)
     {
+        previousError = currentError;
         error = measuredValue - desiredValue;
-        ringBuffer.Push(error);
+        IntegralRingBuffer.Push(error);
+        currentError = error;
     }  
     
     float Get_P_output()
@@ -69,10 +76,16 @@ class Pid_Controller
 
     float Get_I_output(float deltaTime)
     {
-        return ci * ringBuffer.Get(deltaTime);
-    }   
+        return ci * IntegralRingBuffer.Get(deltaTime);
+    }
+
+    float Get_D_output(float dealtaTime)
+    {
+        return cd * ((currentError - previousError) / dealtaTime);
+    }       
 
 };
+
 
 #endif
 
