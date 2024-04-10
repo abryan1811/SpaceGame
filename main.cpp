@@ -6,21 +6,24 @@
 #include <thread>
 #include <vector>
 
-std::vector<Ship> Ships;
+std::vector<const Ship *> Ships;
 bool isGameOver_Fail = false;
 bool isGameOVer_Success = false;
 
-void CheckTouchDown(Ship &ship1, Ship &ship2)
+void CheckTouchDown(std::vector<const Ship *> &Ships)
 {
-    if ((ship1.position.y >= 658.0f && ship1.v.y < 0.0f) || (ship2.position.y >= 658.0f && ship2.v.y < 0.0f))
+    for (size_t i = 0; i < Ships.size(); i++)
     {
-        if (ship1.v.y > ship1.RequiredLandingSpeed || ship2.v.y > ship2.RequiredLandingSpeed) // Required landing speed
+        if (Ships[i]->position.y > 655.0 && Ships[i]->v.y < 0.0f)
         {
-            isGameOVer_Success = true;
-            return;
-        }
+            if (Ships[i]->v.y > Ships[i]->RequiredLandingSpeed)
+            {
+                isGameOVer_Success = true;
+                return;
+            }
 
-        isGameOver_Fail = true;
+            isGameOver_Fail = true;
+        }
     }
 }
 
@@ -94,7 +97,7 @@ int main()
 
     // Load the spaceship texture
     Ship shipData1;
-    Ships.push_back(shipData1);
+    Ships.push_back(&shipData1);
     shipData1.m_Name = "Ship1";
     shipData1.texture = LoadTexture("Assets/ship.png");
     shipData1.animatedTexture = LoadTexture("Assets/engineSpriteSheet.png");
@@ -103,7 +106,7 @@ int main()
     float scaledHeight = shipData1.texture.height * scale;
 
     Ship shipData2;
-    Ships.push_back(shipData2);
+    Ships.push_back(&shipData2);
     shipData2.m_Name = "Ship2";
     shipData2.texture = LoadTexture("Assets/ship.png");
     shipData2.animatedTexture = LoadTexture("Assets/engineSpriteSheet.png");
@@ -183,11 +186,10 @@ int main()
             float output_i = VerticalBoosterPID.Get_I_output(deltaTime);
             float output_d = VerticalBoosterPID.Get_D_output(deltaTime);
             float output = output_i + output_P + output_d;
-           
 
             // // ship and drawing logic here
-            // movementController.UpdatePosition_1(shipData1, shipData1.position.y, deltaTime);  //** UNCOMMENT THIS TO BE ABLE TO PLAY WITH THE OTHER SHIP, 
-            movementController.AutoLand_Vertical(shipData1, output);
+            movementController.UpdatePosition_1(shipData1, shipData1.position.y, deltaTime);  //** UNCOMMENT THIS TO BE ABLE TO PLAY WITH THE OTHER SHIP,
+            // movementController.AutoLand_Vertical(shipData1, output);
             ApplyGravity(shipData1, deltaTime);
             movementController.UpdatePosition_2(shipData2, shipData2.position.y, deltaTime);
             ApplyGravity(shipData2, deltaTime);
@@ -234,7 +236,7 @@ int main()
             DrawText(TextFormat("Speed: %0.2f Vertical", output), 10, 70, 20, RED);
             DrawText(TextFormat("position_Y: %0.2f Y", shipData2.position.y), 10, 90, 20, RED);
 
-            CheckTouchDown(shipData1, shipData2);
+            CheckTouchDown(Ships);
 
             asteroid.Draw();
 

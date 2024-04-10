@@ -5,16 +5,15 @@
 class RingBuffer
 {
 private:
-    std::vector<float > buffer;
+    std::vector<float> buffer;
     size_t head;
     const size_t capacity;
 
 public:
     RingBuffer(size_t _size)
-        : buffer(_size)
-        , head(0)
-        , capacity(_size)
-    {}
+        : buffer(_size), head(0), capacity(_size)
+    {
+    }
 
     void Push(float val)
     {
@@ -26,16 +25,14 @@ public:
     {
         float sumResult = 0.0f;
 
-        for(size_t i = 0; i < capacity; i++)
+        for (size_t i = 0; i < capacity; i++)
         {
             sumResult += buffer[i] * dealtaTime;
         }
-        
+
         return sumResult;
     }
-        
 };
-
 
 class Pid_Controller
 {
@@ -43,19 +40,17 @@ class Pid_Controller
     float currentError;
     float previousError;
 
-    public:
+public:
     Pid_Controller()
-        :IntegralRingBuffer(integralBufferSize), currentError(0.0f), previousError(0.0f)
+        : IntegralRingBuffer(integralBufferSize), currentError(0.0f), previousError(0.0f)
     {
-
     }
-        
-    RingBuffer IntegralRingBuffer;
-    
 
-    const float cp = -1.0f; //Kp
-   
-    const float ci = -25.0f;    
+    RingBuffer IntegralRingBuffer;
+
+    const float cp = -1.0f; // Kp
+
+    const float ci = -25.0f;
 
     const float cd = 0.3f;
 
@@ -67,8 +62,8 @@ class Pid_Controller
         error = measuredValue - desiredValue;
         IntegralRingBuffer.Push(error);
         currentError = error;
-    }  
-    
+    }
+
     float Get_P_output()
     {
         return cp * error;
@@ -82,10 +77,7 @@ class Pid_Controller
     float Get_D_output(float dealtaTime)
     {
         return cd * ((currentError - previousError) / dealtaTime);
-    }       
-
+    }
 };
 
-
 #endif
-
