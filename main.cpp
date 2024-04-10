@@ -98,6 +98,7 @@ int main()
     shipData1.m_Name = "Ship1";
     shipData1.texture = LoadTexture("Assets/ship.png");
     shipData1.animatedTexture = LoadTexture("Assets/engineSpriteSheet.png");
+
     float scale = 2.0f;
     float scaledHeight = shipData1.texture.height * scale;
 
@@ -106,15 +107,13 @@ int main()
     shipData2.m_Name = "Ship2";
     shipData2.texture = LoadTexture("Assets/ship.png");
     shipData2.animatedTexture = LoadTexture("Assets/engineSpriteSheet.png");
-    float scale2 = 2.0f;
-    float scaledHeight2 = shipData2.texture.height * scale2;
 
     // Object Locations
     shipData1.position.x = windowWidth / 2 - scaledHeight / 2; // Center the ship
     float floorPositionY = windowHeight - 50;
     shipData1.position.y = 10.0f;
 
-    shipData2.position.x = windowWidth / 2 - scaledHeight2 / 2; // Center the ship
+    shipData2.position.x = windowWidth / 2 - scaledHeight / 2; // Center the ship
     shipData2.position.x += 20.0f;
     shipData2.position.y = 10.0f;
 
@@ -137,9 +136,9 @@ int main()
     MovementController movementController(moveSpeed, StarterPosition);
 
     Pid_Controller VerticalBoosterPID;
-   
 
-    while (!WindowShouldClose()) {
+    while (!WindowShouldClose())
+    {
         startMenu.Update();
 
         if (startMenu.IsGameStartSelected() && IsKeyPressed(KEY_ENTER))
@@ -169,31 +168,25 @@ int main()
             // Update and Draw Asteroid
             // asteroid.Update(deltaTime);
 
-        // Reset asteroid position if it goes off-screen
-        // if (asteroid.IsOffScreen(windowHeight)) {
-        //     int textureWidth = asteroid.texture.width / 16;
-        //     asteroid.position.x = GetRandomValue(0, windowWidth - textureWidth);
-        //     asteroid.position.y = -asteroid.texture.height;
-        // }        
-        
-        
+            // Reset asteroid position if it goes off-screen
+            // if (asteroid.IsOffScreen(windowHeight)) {
+            //     int textureWidth = asteroid.texture.width / 16;
+            //     asteroid.position.x = GetRandomValue(0, windowWidth - textureWidth);
+            //     asteroid.position.y = -asteroid.texture.height;
+            // }
 
-        float desiredLandingSpeed =  346/17.0f - shipData.position.y/24.0f;       
-        desiredLandingSpeed = std::min(-desiredLandingSpeed,-1.0f);
-        VerticalBoosterPID.SetError(desiredLandingSpeed, shipData.v.y);
+            float desiredLandingSpeed = 346 / 17.0f - shipData1.position.y / 24.0f;
+            desiredLandingSpeed = std::min(-desiredLandingSpeed, -1.0f);
+            VerticalBoosterPID.SetError(desiredLandingSpeed, shipData1.v.y);
 
-        float output_P = VerticalBoosterPID.Get_P_output();
-        float output_i = VerticalBoosterPID.Get_I_output(deltaTime);
-        float output_d = VerticalBoosterPID.Get_D_output(deltaTime);
-        float output = output_i + output_P + output_d;
-
-
-        // float output = VerticalBoosterPID.cp * error; 
-
-
+            float output_P = VerticalBoosterPID.Get_P_output();
+            float output_i = VerticalBoosterPID.Get_I_output(deltaTime);
+            float output_d = VerticalBoosterPID.Get_D_output(deltaTime);
+            float output = output_i + output_P + output_d;
+           
 
             // // ship and drawing logic here
-            // movementController.UpdatePosition_1(shipData1, shipData1.position.y, deltaTime);
+            // movementController.UpdatePosition_1(shipData1, shipData1.position.y, deltaTime);  //** UNCOMMENT THIS TO BE ABLE TO PLAY WITH THE OTHER SHIP, 
             movementController.AutoLand_Vertical(shipData1, output);
             ApplyGravity(shipData1, deltaTime);
             movementController.UpdatePosition_2(shipData2, shipData2.position.y, deltaTime);
@@ -210,7 +203,7 @@ int main()
 
             DrawTexturePro(spaceBackground, sourceSpaceBGRec, destinationSpaceBGRec, backgroundOrigin, 0.0f, WHITE);
             DrawTextureEx(shipData1.texture, shipData1.position, 0.0f, scale, WHITE);
-            DrawTextureEx(shipData2.texture, shipData2.position, 0.0f, scale2, RED);
+            DrawTextureEx(shipData2.texture, shipData2.position, 0.0f, scale, RED);
 
             thrustAnimationFrameIndex = (thrustAnimationFrameIndex + 1) % 8; // Update this each frame to cycle through images
 
