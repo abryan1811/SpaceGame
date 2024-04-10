@@ -1,16 +1,18 @@
 #ifndef Lander_H // header guard
 #define Lander_H
 #include <raylib.h>
+#include <string>
 
 struct Ship
 {
+    std::string m_Name = "";
     Texture2D texture;
     Texture2D animatedTexture;
     Rectangle rec;   
     
     const float Thrust_value = 1.3f;
     const float SideThrust_Value = 5.0f;
-    const float RequiredLandingSpeed = -30.0f;
+    const float RequiredLandingSpeed = -10.0f;
 
     Vector2 Thrust;  
     float ship_baseWeight;

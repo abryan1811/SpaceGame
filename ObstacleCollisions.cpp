@@ -6,7 +6,8 @@
 
     // Initialiser list to set up member variables from the constructor for more usage in the code.
     Asteroid::Asteroid(Vector2 startPos, Texture2D tex, float spd, float scl)
-    : position(startPos), texture(tex), speed(spd), scale(scl), frame(0), updateTime(1.0f / 16.0f), runningTime(0.0f) {
+    : position(startPos), texture(tex), speed(spd), frame(0), updateTime(1.0f / 16.0f), runningTime(0.0f), scale(scl) 
+    {
     sourceRect.width = (texture.width) / 16; // for 16 columns
     sourceRect.height = (texture.height) / 2; // for 2 rows
     sourceRect.x = 0;
