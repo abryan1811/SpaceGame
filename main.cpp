@@ -6,7 +6,7 @@
 #include <thread>
 #include <vector>
 
-std::vector<const Ship *> Ships;
+std::vector<const Ship*> Ships;
 bool isGameOver_Fail = false;
 bool isGameOVer_Success = false;
 
@@ -75,7 +75,6 @@ void DisplayGameOver()
 
 int main()
 {
-
     int windowWidth = 800;
     int windowHeight = 800;
     char Title[]{"SpaceHopper"};
@@ -134,7 +133,7 @@ int main()
 
     Texture2D asteroids = LoadTexture("Assets/animated_asteroid.png");
 
-    Asteroid asteroid({100, -100}, asteroids, 150.0f, 0.5f);
+    Asteroid asteroid({100, -100}, asteroids, 80.0f, 0.5f);
 
     MovementController movementController(moveSpeed, StarterPosition);
 
@@ -168,10 +167,10 @@ int main()
             BeginDrawing();
             ClearBackground(BLACK);
 
-            // Update and Draw Asteroid
+            // // Update and Draw Asteroid
             // asteroid.Update(deltaTime);
 
-            // Reset asteroid position if it goes off-screen
+            // // Reset asteroid position if it goes off-screen
             // if (asteroid.IsOffScreen(windowHeight)) {
             //     int textureWidth = asteroid.texture.width / 16;
             //     asteroid.position.x = GetRandomValue(0, windowWidth - textureWidth);
@@ -188,8 +187,8 @@ int main()
             float output = output_i + output_P + output_d;
 
             // // ship and drawing logic here
-            movementController.UpdatePosition_1(shipData1, shipData1.position.y, deltaTime);  //** UNCOMMENT THIS TO BE ABLE TO PLAY WITH THE OTHER SHIP,
-            // movementController.AutoLand_Vertical(shipData1, output);
+            // movementController.UpdatePosition_1(shipData1, shipData1.position.y, deltaTime);  //** UNCOMMENT THIS TO BE ABLE TO PLAY WITH THE OTHER SHIP,
+            movementController.AutoLand_Vertical(shipData1, output);
             ApplyGravity(shipData1, deltaTime);
             movementController.UpdatePosition_2(shipData2, shipData2.position.y, deltaTime);
             ApplyGravity(shipData2, deltaTime);
@@ -246,7 +245,7 @@ int main()
             DrawText(TextFormat("Fuel: %0.2f Liters", shipData1.fuel), 10, 30, 20, WHITE);
             DrawText(TextFormat("Speed: %0.2f Vertical", shipData1.v.y), 10, 50, 20, WHITE);
             DrawText(TextFormat("Speed: %0.2f Vertical", output), 10, 70, 20, RED);
-            DrawText(TextFormat("position_Y: %0.2f Y", shipData2.position.y), 10, 90, 20, RED);
+            DrawText(TextFormat("position_Y: %0.2f Y", shipData2.position.x), 10, 90, 20, RED);
 
             CheckTouchDown(Ships);
 
