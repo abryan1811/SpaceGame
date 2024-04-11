@@ -1,11 +1,29 @@
+#ifndef PHYSICS_H
+#define PHYSICS_H
+
+#include "raylib.h" 
+#include "MovementController.h" 
 
 
-// Vector2 Euler(Vector2 a, float h);
+Vector2 createVector2(float x, float y);
 
-// extern Vector2 Gravity; //Gravity not a const - Allow us to play around with this force in game if we want to
-// extern Vector2 Thrust;
+Vector2 Euler(Vector2 a, float h);
 
-// void SetForce(Ship& ship);
- 
-// void ApplyEuler(Ship ship, float deltaTime);
- 
+
+extern Vector2 Gravity;
+
+void Collision_Sky(Ship& ship);
+void Collision_Ground(Ship& ship);
+void Collision_Left(Ship& ship);
+void Collision_Right(Ship& ship);
+
+void CheckCollision(Ship& ship);
+
+void SetForce(Ship& ship);
+
+void ApplyEuler(Ship& ship, float deltaTime);
+
+
+void ApplyGravity(Ship& ship, float deltaTime);
+
+#endif // PHYSICS_H

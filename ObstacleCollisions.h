@@ -2,6 +2,7 @@
 #define OBSTACLE_COLLISIONS_H
 
 #include "raylib.h"
+// #include "Entities/Lander.h"
 
 class Asteroid 
 {
@@ -25,5 +26,14 @@ public:
 private:
     void UpdateFrame(float deltaTime);
 };
+
+// class Collision
+// {
+//     public:
+//     static void DetectCollision()
+
+//     private:
+//     Collision(){}
+// };
 
 #endif // OBSTACLE_COLLISIONS_H

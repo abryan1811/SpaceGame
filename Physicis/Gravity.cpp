@@ -1,5 +1,6 @@
+#include "Gravity.h"
 #include<iostream>
-#include "MovementController.h"
+
 
 Vector2 createVector2(float x, float y) // RayLib Vector2 has no constructor, so I use this when creating new vectors
 {

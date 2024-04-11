@@ -1,4 +1,4 @@
-#include "Physicis/Gravity.cpp"
+#include "Physicis/Gravity.h"
 #include "Physicis/SideBoosters.cpp"
 #include "StartMenu.h"
 #include "ObstacleCollisions.h"
@@ -188,7 +188,7 @@ int main()
 
             // // ship and drawing logic here
             // movementController.UpdatePosition_1(shipData1, shipData1.position.y, deltaTime);  //** UNCOMMENT THIS TO BE ABLE TO PLAY WITH THE OTHER SHIP,
-            movementController.AutoLand_Vertical(shipData1, output);
+            movementController.AutoLand_Vertical(shipData1, output);        
             ApplyGravity(shipData1, deltaTime);
             movementController.UpdatePosition_2(shipData2, shipData2.position.y, deltaTime);
             ApplyGravity(shipData2, deltaTime);
