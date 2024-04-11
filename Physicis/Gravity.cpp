@@ -29,10 +29,20 @@ void Collision_Ground(Ship& ship)
    ship.f.y = (ship.f.y + 10) - ship.f.y;    
 }
 
-void SetForce(Ship& ship)
-{    
-    ship.f.y = (Gravity.y + ship.Thrust.y) * ship.mass;    
+void Collision_Left(Ship& ship)
+{
+    ship.v.x -= ship.v.x;
+    ship.f.x = (ship.f.x + 5) - ship.f.x;
+}
 
+void Collision_Right(Ship& ship)
+{
+    ship.v.x -= ship.v.x;
+    ship.f.x = (ship.f.x - 5) - ship.f.x;
+}
+
+void CheckCollision(Ship& ship)
+{
     if(ship.position.y >= 658.0f && ship.v.y < 0.0f )
     {
         Collision_Ground(ship); 
@@ -42,6 +52,23 @@ void SetForce(Ship& ship)
     {
         Collision_Sky(ship);
     }
+
+    if(ship.position.x <= -20.0f && ship.v.x < 0.0f)
+    {
+        Collision_Left(ship);
+    }
+    
+    if(ship.position.x >= 700.0f && ship.v.x > 0.0f)
+    {
+        Collision_Right(ship);
+    }
+}
+
+void SetForce(Ship& ship)
+{    
+    ship.f.y = (Gravity.y + ship.Thrust.y) * ship.mass;    
+
+    CheckCollision(ship);
 }
 
 void ApplyEuler(Ship& ship, float deltaTime)

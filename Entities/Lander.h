@@ -12,7 +12,7 @@ struct Ship
     
     const float Thrust_value = 1.3f;
     const float SideThrust_Value = 5.0f;
-    const float RequiredLandingSpeed = -10.0f;
+    const float RequiredLandingSpeed = -20.0f;
 
     Vector2 Thrust;  
     float ship_baseWeight;
