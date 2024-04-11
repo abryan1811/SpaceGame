@@ -108,8 +108,8 @@ int main()
     Ship shipData2;
     Ships.push_back(&shipData2);
     shipData2.m_Name = "Ship2";
-    shipData2.texture = LoadTexture("Assets/ship.png");
-    shipData2.animatedTexture = LoadTexture("Assets/engineSpriteSheet.png");
+    shipData2.texture = LoadTexture("Assets/ship2.png");
+    shipData2.animatedTexture = LoadTexture("Assets/engineSpriteSheet2.png");
 
     // Object Locations
     shipData1.position.x = windowWidth / 2 - scaledHeight / 2; // Center the ship
@@ -205,7 +205,7 @@ int main()
 
             DrawTexturePro(spaceBackground, sourceSpaceBGRec, destinationSpaceBGRec, backgroundOrigin, 0.0f, WHITE);
             DrawTextureEx(shipData1.texture, shipData1.position, 0.0f, scale, WHITE);
-            DrawTextureEx(shipData2.texture, shipData2.position, 0.0f, scale, RED);
+            DrawTextureEx(shipData2.texture, shipData2.position, 0.0f, scale, WHITE);
 
             thrustAnimationFrameIndex = (thrustAnimationFrameIndex + 1) % 8; // Update this each frame to cycle through images
 
@@ -215,9 +215,15 @@ int main()
                 (float)(shipData1.animatedTexture.width / 8),
                 (float)shipData1.animatedTexture.height};
 
-            Rectangle destRec = {
+            Rectangle destRec1 = {
                 shipData1.position.x,
                 shipData1.position.y,
+                sourceRec.width * scale,
+                sourceRec.height * scale};
+
+                Rectangle destRec2 = {
+                shipData2.position.x,
+                shipData2.position.y,
                 sourceRec.width * scale,
                 sourceRec.height * scale};
 
@@ -226,7 +232,13 @@ int main()
             if (movementController.thrustOn_1)
             {
                 // Draw the current frame of the animation with scaling
-                DrawTexturePro(shipData1.animatedTexture, sourceRec, destRec, origin, 0.0f, WHITE);
+                DrawTexturePro(shipData1.animatedTexture, sourceRec, destRec1, origin, 0.0f, WHITE);
+            }
+
+            if (movementController.thrustOn_2)
+            {
+                // Draw the current frame of the animation with scaling
+                DrawTexturePro(shipData2.animatedTexture, sourceRec, destRec2, origin, 0.0f, WHITE);
             }
 
             DrawRectangle(0, floorPositionY, windowWidth, 10, WHITE);
